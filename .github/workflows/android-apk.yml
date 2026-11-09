@@ -1,0 +1,68 @@
+name: Android APK
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v4
+
+      - name: Install Android SDK packages
+        run: sdkmanager "platforms;android-37" "build-tools;36.0.0"
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v6
+        with:
+          gradle-version: '9.6.0'
+
+      - name: Lint
+        run: gradle --no-daemon :app:lintDebug
+
+      - name: Build APK
+        run: gradle --no-daemon :app:assembleDebug
+
+      - name: Verify APK structure
+        run: |
+          test -s app/build/outputs/apk/debug/app-debug.apk
+          apkanalyzer manifest application-id app/build/outputs/apk/debug/app-debug.apk
+          apkanalyzer apk summary app/build/outputs/apk/debug/app-debug.apk
+          sha256sum app/build/outputs/apk/debug/app-debug.apk
+
+      - name: Package ZIP
+        run: |
+          mkdir -p dist
+          cp app/build/outputs/apk/debug/app-debug.apk dist/SerpenteNeon.apk
+          (cd dist && zip -9 SerpenteNeon-Android.zip SerpenteNeon.apk)
+          unzip -t dist/SerpenteNeon-Android.zip
+          sha256sum dist/SerpenteNeon-Android.zip
+
+      - name: Upload verified APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: serpente-neon-android
+          path: |
+            dist/SerpenteNeon.apk
+            dist/SerpenteNeon-Android.zip
+          if-no-files-found: error
+          retention-days: 30
