@@ -12,7 +12,6 @@ import android.view.WindowInsetsController;
 import android.view.WindowManager;
 import android.webkit.ConsoleMessage;
 import android.webkit.WebChromeClient;
-import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebResourceResponse;
 import android.webkit.WebSettings;
@@ -83,18 +82,6 @@ public final class MainActivity extends Activity {
                 }
             }
 
-            @Override
-            public void onReceivedError(
-                WebView view,
-                WebResourceRequest request,
-                WebResourceError error
-            ) {
-                super.onReceivedError(view, request, error);
-                if (request.isForMainFrame()) {
-                    Log.e(TAG, "MAIN_FRAME_ERROR=" + error.getErrorCode() + " " +
-                        error.getDescription());
-                }
-            }
         });
 
         webView.setWebChromeClient(new WebChromeClient() {
