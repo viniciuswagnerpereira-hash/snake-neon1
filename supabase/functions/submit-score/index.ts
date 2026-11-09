@@ -42,6 +42,10 @@ Deno.serve(async (req: Request) => {
       return json({ error: "invalid_duration" }, 400);
     }
 
+    if (body?.dry_run === true) {
+      return json({ ok: true, dry_run: true }, 200);
+    }
+
     const supabaseUrl = Deno.env.get("SUPABASE_URL");
     const modernSecrets = Deno.env.get("SUPABASE_SECRET_KEYS");
     const legacyServiceRole = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
