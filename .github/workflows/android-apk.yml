@@ -1,4 +1,5 @@
 name: Android APK
+# Runtime validation includes emulator boot + game start.
 
 on:
   pull_request:
