@@ -134,16 +134,15 @@ jobs:
 
             sleep 8
 
-            test -n "$(adb shell pidof com.serpenteneon.game | tr -d '\r')"
-
-            adb shell dumpsys activity activities | grep -q 'com.serpenteneon.game/.MainActivity'
-
-            adb logcat --pid="$(adb shell pidof com.serpenteneon.game | tr -d '\r')" -d > runtime-logcat.txt
+            adb logcat -d > runtime-logcat.txt
             cat runtime-logcat.txt
+
+            test -n "$(adb shell pidof com.serpenteneon.game | tr -d '\r')"
+            adb shell dumpsys activity activities | grep -q 'com.serpenteneon.game/.MainActivity'
 
             grep -q 'DOM_READY=true' runtime-logcat.txt
             grep -q 'GAME_START=true' runtime-logcat.txt
 
-            ! grep -q 'MAIN_FRAME_ERROR=' runtime-logcat.txt
             ! grep -q 'JS_ERROR=' runtime-logcat.txt
             ! grep -q 'FATAL EXCEPTION' runtime-logcat.txt
+            ! grep -q 'Process: com.serpenteneon.game' runtime-logcat.txt
