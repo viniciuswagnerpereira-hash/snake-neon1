@@ -321,6 +321,49 @@ const cam = { x: 0, y: 0, z: 1 };
 let menuFollow = null, menuFollowT = 0;
 let playerName = 'Jogador';
 
+const SUPABASE_URL = 'https://qlvmlsbbdpdlbnfpyrvd.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_Whxrjns4n-TBWToFNZ0usA_HidOxQom';
+const APP_VERSION = '1.0.0';
+let globalBoard = [];
+let gameStartedAt = 0;
+
+async function fetchGlobalLeaderboard() {
+  try {
+    const res = await fetch(
+      SUPABASE_URL + '/rest/v1/game_scores?select=nickname,score,kills&order=score.desc,created_at.asc&limit=5',
+      { headers: { apikey: SUPABASE_KEY } }
+    );
+    if (!res.ok) return;
+    const data = await res.json();
+    globalBoard = Array.isArray(data) ? data : [];
+    if (state !== 'play') updateHud();
+  } catch (e) {
+    // O jogo continua offline mesmo se o ranking remoto falhar.
+  }
+}
+
+async function submitRemoteScore(score, kills, durationMs) {
+  try {
+    const res = await fetch(SUPABASE_URL + '/functions/v1/submit-score', {
+      method: 'POST',
+      headers: {
+        apikey: SUPABASE_KEY,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        nickname: playerName,
+        score,
+        kills,
+        duration_ms: durationMs,
+        app_version: APP_VERSION
+      })
+    });
+    if (res.ok) await fetchGlobalLeaderboard();
+  } catch (e) {
+    // Falha de rede não impede uma nova partida.
+  }
+}
+
 function spawnPoint(minDist) {
   for (let t = 0; t < 30; t++) {
     const a = Math.random() * TAU, d = Math.sqrt(Math.random()) * CFG.R * 0.78;
@@ -660,6 +703,22 @@ for (let i = 0; i < 6; i++) {
 }
 let hudT = 0, lastScore = CFG.START_MASS;
 function updateHud() {
+  if (state !== 'play' && globalBoard.length) {
+    for (let i = 0; i < 6; i++) {
+      const li = rows[i];
+      const remote = globalBoard[i];
+      if (!remote) { li.hidden = true; continue; }
+      li.hidden = false;
+      li.className = '';
+      li.children[0].textContent = i + 1;
+      li.children[1].textContent = remote.nickname;
+      li.children[2].textContent = remote.score;
+    }
+    $('score').textContent = lastScore;
+    $('best').textContent = Math.max(best, lastScore);
+    $('kills').textContent = player ? player.kills : 0;
+    return;
+  }
   const alive = snakes.filter((s) => s.alive).sort((a, b) => b.mass - a.mass);
   const top = alive.slice(0, 5);
   for (let i = 0; i < 6; i++) {
@@ -691,7 +750,7 @@ function startGame() {
   snakes.push(player);
   cam.x = p.x; cam.y = p.y;
   mx = W / 2 + Math.cos(player.angle) * 100; my = H / 2 + Math.sin(player.angle) * 100;
-  state = 'play'; overShown = false; lastScore = CFG.START_MASS;
+  state = 'play'; overShown = false; lastScore = CFG.START_MASS; gameStartedAt = performance.now();
   $('start').hidden = true; $('over').hidden = true;
   $('boostBtn').hidden = false;
   $('hint').classList.remove('fade');
@@ -709,6 +768,8 @@ function showOver() {
   $('boostBtn').hidden = true;
   $('over').hidden = false;
   $('againBtn').focus();
+  const durationMs = Math.max(1000, Math.round(performance.now() - gameStartedAt));
+  void submitRemoteScore(score, player.kills, durationMs);
 }
 
 /* ---------- Entrada ---------- */
@@ -763,6 +824,7 @@ function frame(t) {
   requestAnimationFrame(frame);
 }
 updateHud();
+void fetchGlobalLeaderboard();
 requestAnimationFrame(frame);
 })();
 </script>
