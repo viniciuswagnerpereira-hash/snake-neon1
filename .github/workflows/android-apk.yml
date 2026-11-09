@@ -130,17 +130,14 @@ jobs:
             adb logcat -c
 
             adb shell am force-stop com.serpenteneon.game
-            adb shell am start -W \
-              -n com.serpenteneon.game/.MainActivity \
-              --ez smoke_test true
+            adb shell am start -W -n com.serpenteneon.game/.MainActivity --ez smoke_test true
 
             sleep 8
 
             PID="$(adb shell pidof com.serpenteneon.game | tr -d '\r')"
             test -n "$PID"
 
-            adb shell dumpsys activity activities \
-              | grep -q 'com.serpenteneon.game/.MainActivity'
+            adb shell dumpsys activity activities | grep -q 'com.serpenteneon.game/.MainActivity'
 
             adb logcat --pid="$PID" -d > runtime-logcat.txt
             cat runtime-logcat.txt
