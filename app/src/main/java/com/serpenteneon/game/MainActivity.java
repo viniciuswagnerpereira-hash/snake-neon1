@@ -34,7 +34,6 @@ public final class MainActivity extends Activity {
 
         smokeTest = getIntent().getBooleanExtra("smoke_test", false);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        hideSystemUi();
 
         final WebViewAssetLoader assetLoader = new WebViewAssetLoader.Builder()
             .addPathHandler("/assets/", new WebViewAssetLoader.AssetsPathHandler(this))
@@ -114,22 +113,27 @@ public final class MainActivity extends Activity {
         }
 
         setContentView(webView);
+        webView.post(this::hideSystemUi);
         webView.loadUrl(APP_URL);
     }
 
     private void hideSystemUi() {
         Window window = getWindow();
+        View decorView = window.getDecorView();
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             window.setDecorFitsSystemWindows(false);
-            WindowInsetsController controller = window.getInsetsController();
-            if (controller != null) {
-                controller.hide(WindowInsets.Type.statusBars() | WindowInsets.Type.navigationBars());
-                controller.setSystemBarsBehavior(
-                    WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
-                );
+            WindowInsetsController controller = decorView.getWindowInsetsController();
+            if (controller == null) {
+                decorView.post(this::hideSystemUi);
+                return;
             }
+            controller.hide(WindowInsets.Type.statusBars() | WindowInsets.Type.navigationBars());
+            controller.setSystemBarsBehavior(
+                WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+            );
         } else {
-            window.getDecorView().setSystemUiVisibility(
+            decorView.setSystemUiVisibility(
                 View.SYSTEM_UI_FLAG_FULLSCREEN
                     | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                     | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
