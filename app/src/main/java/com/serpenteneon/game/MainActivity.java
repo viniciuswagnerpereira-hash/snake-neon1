@@ -19,7 +19,7 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 
 import androidx.webkit.WebViewAssetLoader;
-import androidx.webkit.WebViewClientCompat;
+import android.webkit.WebViewClient;
 
 public final class MainActivity extends Activity {
     private static final String TAG = "SerpenteNeon";
@@ -43,7 +43,7 @@ public final class MainActivity extends Activity {
 
         webView = new WebView(this);
         webView.setBackgroundColor(0xFF060814);
-        webView.setWebViewClient(new WebViewClientCompat() {
+        webView.setWebViewClient(new WebViewClient() {
             @Override
             public WebResourceResponse shouldInterceptRequest(
                 WebView view,
