@@ -36,6 +36,20 @@ jobs:
         with:
           gradle-version: '9.6.0'
 
+      - name: Smoke test Supabase
+        env:
+          SUPABASE_URL: https://qlvmlsbbdpdlbnfpyrvd.supabase.co
+          SUPABASE_KEY: sb_publishable_Whxrjns4n-TBWToFNZ0usA_HidOxQom
+        run: |
+          set -euo pipefail
+
+          curl --fail --silent --show-error             "$SUPABASE_URL/rest/v1/game_scores?select=nickname,score&order=score.desc&limit=5"             -H "apikey: $SUPABASE_KEY" >/tmp/leaderboard.json
+
+          code="$(curl --silent --output /tmp/direct-write.json --write-out '%{http_code}'             -X POST "$SUPABASE_URL/rest/v1/game_scores"             -H "apikey: $SUPABASE_KEY"             -H "Content-Type: application/json"             -d '{"nickname":"CI_DIRECT","score":1,"kills":0,"duration_ms":1000,"app_version":"ci"}')"
+          test "$code" = "401" -o "$code" = "403"
+
+          curl --fail --silent --show-error             -X POST "$SUPABASE_URL/functions/v1/submit-score"             -H "apikey: $SUPABASE_KEY"             -H "Content-Type: application/json"             -d '{"nickname":"CI_SMOKE","score":1,"kills":0,"duration_ms":1000,"app_version":"ci","dry_run":true}'             | grep -q '"dry_run":true'
+
       - name: Lint
         run: gradle --no-daemon :app:lintDebug
 
