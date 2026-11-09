@@ -134,12 +134,11 @@ jobs:
 
             sleep 8
 
-            PID="$(adb shell pidof com.serpenteneon.game | tr -d '\r')"
-            test -n "$PID"
+            test -n "$(adb shell pidof com.serpenteneon.game | tr -d '\r')"
 
             adb shell dumpsys activity activities | grep -q 'com.serpenteneon.game/.MainActivity'
 
-            adb logcat --pid="$PID" -d > runtime-logcat.txt
+            adb logcat --pid="$(adb shell pidof com.serpenteneon.game | tr -d '\r')" -d > runtime-logcat.txt
             cat runtime-logcat.txt
 
             grep -q 'DOM_READY=true' runtime-logcat.txt
