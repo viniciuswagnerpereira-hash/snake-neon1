@@ -32,3 +32,6 @@ app/build/outputs/apk/debug/app-debug.apk
 As alterações de schema estão em `supabase/migrations/` e a Edge Function em `supabase/functions/submit-score/`.
 
 A publishable key pode ficar no cliente. Chaves secretas/service-role nunca devem ser colocadas no app ou no repositório.
+
+
+Runtime validation: Android emulator boot + game start is enforced by CI.

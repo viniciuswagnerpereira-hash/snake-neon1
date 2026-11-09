@@ -12,14 +12,13 @@ import android.view.WindowInsetsController;
 import android.view.WindowManager;
 import android.webkit.ConsoleMessage;
 import android.webkit.WebChromeClient;
-import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebResourceResponse;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 
 import androidx.webkit.WebViewAssetLoader;
-import androidx.webkit.WebViewClientCompat;
+import android.webkit.WebViewClient;
 
 public final class MainActivity extends Activity {
     private static final String TAG = "SerpenteNeon";
@@ -35,7 +34,6 @@ public final class MainActivity extends Activity {
 
         smokeTest = getIntent().getBooleanExtra("smoke_test", false);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        hideSystemUi();
 
         final WebViewAssetLoader assetLoader = new WebViewAssetLoader.Builder()
             .addPathHandler("/assets/", new WebViewAssetLoader.AssetsPathHandler(this))
@@ -43,7 +41,7 @@ public final class MainActivity extends Activity {
 
         webView = new WebView(this);
         webView.setBackgroundColor(0xFF060814);
-        webView.setWebViewClient(new WebViewClientCompat() {
+        webView.setWebViewClient(new WebViewClient() {
             @Override
             public WebResourceResponse shouldInterceptRequest(
                 WebView view,
@@ -83,18 +81,6 @@ public final class MainActivity extends Activity {
                 }
             }
 
-            @Override
-            public void onReceivedError(
-                WebView view,
-                WebResourceRequest request,
-                WebResourceError error
-            ) {
-                super.onReceivedError(view, request, error);
-                if (request.isForMainFrame()) {
-                    Log.e(TAG, "MAIN_FRAME_ERROR=" + error.getErrorCode() + " " +
-                        error.getDescription());
-                }
-            }
         });
 
         webView.setWebChromeClient(new WebChromeClient() {
@@ -127,22 +113,27 @@ public final class MainActivity extends Activity {
         }
 
         setContentView(webView);
+        webView.post(this::hideSystemUi);
         webView.loadUrl(APP_URL);
     }
 
     private void hideSystemUi() {
         Window window = getWindow();
+        View decorView = window.getDecorView();
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             window.setDecorFitsSystemWindows(false);
-            WindowInsetsController controller = window.getInsetsController();
-            if (controller != null) {
-                controller.hide(WindowInsets.Type.statusBars() | WindowInsets.Type.navigationBars());
-                controller.setSystemBarsBehavior(
-                    WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
-                );
+            WindowInsetsController controller = decorView.getWindowInsetsController();
+            if (controller == null) {
+                decorView.post(this::hideSystemUi);
+                return;
             }
+            controller.hide(WindowInsets.Type.statusBars() | WindowInsets.Type.navigationBars());
+            controller.setSystemBarsBehavior(
+                WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+            );
         } else {
-            window.getDecorView().setSystemUiVisibility(
+            decorView.setSystemUiVisibility(
                 View.SYSTEM_UI_FLAG_FULLSCREEN
                     | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                     | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
