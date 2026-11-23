@@ -226,6 +226,11 @@ function cloneJson(value) {
   return JSON.parse(JSON.stringify(value));
 }
 
+async function validarSprites() {
+  const resposta = await fetch('monster-sprites.svg', { cache: 'no-store' });
+  if (!resposta.ok) throw new Error('Não foi possível carregar as ilustrações dos monstrinhos.');
+}
+
 async function carregarMonstrinhos() {
   const resposta = await fetch('monstrinhos.json', { cache: 'no-store' });
   if (!resposta.ok) throw new Error('Não foi possível carregar monstrinhos.json');
@@ -623,6 +628,7 @@ function novaBatalha() {
 
 async function iniciarAplicacao() {
   try {
+    await validarSprites();
     await carregarMonstrinhos();
     await carregarHistorico();
     renderizarSelecao();
