@@ -1,37 +1,74 @@
-# Serpente Neon
+# Arena dos Monstrinhos
 
-Jogo arcade em Canvas, empacotado como aplicativo Android nativo com WebView.
+Jogo de batalhas por turnos com criaturas originais, inspirado no gênero de jogos de captura e batalha de monstrinhos.
 
-## Arquitetura
+## Requisitos da atividade atendidos
 
-- Jogo: HTML5 Canvas/JavaScript, empacotado dentro do APK.
-- Android: WebView fullscreen em modo paisagem.
-- Backend: Supabase.
-- Ranking: `public.game_scores`, leitura pública protegida por RLS.
-- Escrita: Edge Function `submit-score`; nenhuma chave secreta é distribuída no APK.
-- CI: GitHub Actions executa lint, compila, valida o APK e publica APK + ZIP como artefatos.
+- Variáveis para controlar treinador, personagem escolhido, turno, pontos de vida e estado da batalha.
+- Condicionais `if/else` para validar escolhas, calcular vitória/derrota, controlar vida e exibir estados diferentes.
+- Estrutura `for` para percorrer os personagens carregados do JSON, renderizar ataques e consultar o histórico.
+- Estrutura `while` no laço principal da batalha: a luta continua enquanto jogador e adversário tiverem pontos de vida.
+- Interação com o usuário por nome do treinador, escolha de criatura e escolha de ataque a cada turno.
+- Quatro criaturas disponíveis, cada uma com nome, tipo, vida, força de ataque e dois golpes diferentes.
+- Histórico de vitórias e derrotas.
 
-## Build Android
+## JSON
 
-O workflow `.github/workflows/android-apk.yml` usa JDK 17, Android SDK 37, Android Gradle Plugin 9.4.1 e Gradle 9.6.0.
+### `monstrinhos.json`
 
-Build local (com SDK Android configurado):
+Arquivo responsável pelos personagens e atributos. O JavaScript carrega os dados com `fetch()` e `response.json()`.
 
-```bash
-gradle :app:lintDebug :app:assembleDebug
+Cada criatura possui:
+- `id`
+- `nome`
+- `tipo`
+- `simbolo`
+- `vida`
+- `ataque`
+- `descricao`
+- `ataques` com dois golpes
+
+Há uma cópia para a versão web na raiz e outra em:
+
+`app/src/main/assets/monstrinhos.json`
+
+### `historico.json`
+
+O histórico é representado pelo objeto:
+
+```json
+{
+  "batalhas": []
+}
 ```
 
-APK gerado:
+Ao terminar uma batalha, o programa cria um registro com data, treinador, monstrinho do jogador, adversário, resultado, turnos e vida restante.
 
-```text
-app/build/outputs/apk/debug/app-debug.apk
+No Android, a ponte `HistoricoAndroid` salva o JSON em um arquivo real chamado `historico.json` no armazenamento interno do aplicativo. No navegador, o fallback usa `localStorage` e o botão **Exportar historico.json** permite gerar o arquivo.
+
+## Estrutura principal da batalha
+
+O laço é assíncrono para permitir que o usuário escolha um ataque a cada turno:
+
+```js
+while (
+  batalha.jogador.hp > 0 &&
+  batalha.adversario.hp > 0
+) {
+  const ataque = await esperarAtaqueDoJogador();
+  // jogador ataca
+  // adversário ataca
+}
 ```
 
-## Supabase
+## Android
 
-As alterações de schema estão em `supabase/migrations/` e a Edge Function em `supabase/functions/submit-score/`.
+- WebView fullscreen.
+- Assets servidos com `WebViewAssetLoader`.
+- `minSdk 21`.
+- Versão atual: `2.0.0`.
+- O pipeline do GitHub instala o APK em emulador Android e valida a abertura do jogo.
 
-A publishable key pode ficar no cliente. Chaves secretas/service-role nunca devem ser colocadas no app ou no repositório.
+## Observação
 
-
-Runtime validation: Android emulator boot + game start is enforced by CI.
+O projeto utiliza criaturas, nomes e elementos visuais originais. A mecânica é inspirada no gênero de batalhas por turnos popularizado por jogos como Pokémon, sem copiar personagens ou artes oficiais.
