@@ -31,11 +31,11 @@ h1{font-size:clamp(24px,4vw,40px)}
 .field label,.section-label{font-size:12px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);font-weight:700}
 .field input{width:100%;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:#111827;color:#fff;outline:none}
 .field input:focus{border-color:var(--accent2);box-shadow:0 0 0 3px #38bdf833}
-.monster-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:10px}
-.monster-card{position:relative;text-align:left;border:2px solid var(--line);border-radius:16px;background:linear-gradient(145deg,#1f2937,#111827);color:#fff;padding:14px;min-height:158px;transition:.18s transform,.18s border-color,.18s box-shadow}
+.monster-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px;margin-top:10px}
+.monster-card{position:relative;text-align:left;border:2px solid var(--line);border-radius:16px;background:linear-gradient(145deg,#1f2937,#111827);color:#fff;padding:12px;min-height:300px;overflow:hidden;transition:.18s transform,.18s border-color,.18s box-shadow}
 .monster-card:hover{transform:translateY(-2px)}
 .monster-card.selected{border-color:var(--accent);box-shadow:0 0 0 3px #facc1526}
-.monster-icon{font-size:38px;filter:drop-shadow(0 5px 8px #0006)}
+.monster-art{width:100%;aspect-ratio:1/1;border-radius:12px;background-image:url('monster-sprites.svg');background-size:400% 400%;background-repeat:no-repeat;background-color:#f8f6f2;box-shadow:0 8px 22px #0005,inset 0 0 0 1px #ffffff22}
 .monster-name{font-size:20px;font-weight:900;margin-top:4px}
 .type{display:inline-block;margin-top:5px;padding:4px 8px;border-radius:999px;background:#ffffff12;color:#e2e8f0;font-size:11px}
 .stats{display:flex;gap:12px;margin-top:10px;color:var(--muted);font-size:12px}
@@ -53,7 +53,7 @@ h1{font-size:clamp(24px,4vw,40px)}
 .fighter.enemy{background:linear-gradient(145deg,#3f1724e8,#0f172ae8)}
 .fighter.player{background:linear-gradient(145deg,#123047e8,#0f172ae8)}
 .creature{display:grid;place-items:center;text-align:center;padding:10px}
-.creature .icon{font-size:92px;line-height:1;filter:drop-shadow(0 18px 20px #0008)}
+.creature .art{width:min(280px,92%);aspect-ratio:1/1;border-radius:18px;background-image:url('monster-sprites.svg');background-size:400% 400%;background-repeat:no-repeat;background-color:#f8f6f2;box-shadow:0 18px 36px #0008,inset 0 0 0 2px #ffffff18}
 .creature h2{font-size:28px;margin-top:8px}
 .hp-wrap{margin-top:12px}
 .hp-line{display:flex;justify-content:space-between;color:#cbd5e1;font-size:13px;margin-bottom:6px}
@@ -82,7 +82,7 @@ h1{font-size:clamp(24px,4vw,40px)}
   .grid,.battle-layout{grid-template-columns:1fr}
   .battle-layout{grid-template-areas:"enemy" "center" "player"}
   .fighter.enemy{grid-area:enemy}.center-panel{grid-area:center}.fighter.player{grid-area:player}
-  .fighter{min-height:250px}.creature .icon{font-size:72px}
+  .fighter{min-height:250px}.creature .art{width:min(230px,88%)}
 }
 @media(max-width:560px){
   .monster-grid,.attack-grid{grid-template-columns:1fr}
@@ -98,7 +98,7 @@ h1{font-size:clamp(24px,4vw,40px)}
       <div class="logo-orb" aria-hidden="true"></div>
       <div>
         <h1>Arena dos Monstrinhos</h1>
-        <p class="subtitle">Batalhas por turnos com criaturas originais • projeto inspirado no gênero de Pokémon</p>
+        <p class="subtitle">16 criaturas originais ilustradas • batalhas por turnos • tipos, poderes e habilidades especiais</p>
       </div>
     </div>
     <div class="badge">while • for • if/else • JSON</div>
@@ -107,7 +107,7 @@ h1{font-size:clamp(24px,4vw,40px)}
   <section id="setupScreen" class="screen active">
     <div class="grid">
       <div class="panel">
-        <h2>Escolha seu monstrinho</h2>
+        <h2>Escolha entre 16 monstrinhos</h2>
         <div class="field">
           <label for="trainerName">Nome do treinador</label>
           <input id="trainerName" maxlength="18" placeholder="Digite seu nome" autocomplete="off">
@@ -131,7 +131,7 @@ h1{font-size:clamp(24px,4vw,40px)}
     <div class="battle-layout">
       <article class="fighter player">
         <div class="creature">
-          <div id="playerIcon" class="icon"></div>
+          <div id="playerArt" class="art" role="img" aria-label="Monstrinho do jogador"></div>
           <h2 id="playerMonsterName"></h2>
           <span id="playerType" class="type"></span>
         </div>
@@ -152,7 +152,7 @@ h1{font-size:clamp(24px,4vw,40px)}
 
       <article class="fighter enemy">
         <div class="creature">
-          <div id="enemyIcon" class="icon"></div>
+          <div id="enemyArt" class="art" role="img" aria-label="Monstrinho adversário"></div>
           <h2 id="enemyMonsterName"></h2>
           <span id="enemyType" class="type"></span>
         </div>
@@ -197,8 +197,38 @@ let resolverAtaque = null;
 let battleToken = 0;
 window.appReady = false;
 
+const VANTAGENS = {
+  Fogo: ['Natureza', 'Gelo'],
+  Água: ['Fogo', 'Terra'],
+  Elétrico: ['Água', 'Vento'],
+  Natureza: ['Água', 'Terra'],
+  Gelo: ['Natureza', 'Vento'],
+  Terra: ['Elétrico', 'Fogo'],
+  Sombra: ['Natureza', 'Vento'],
+  Vento: ['Terra', 'Fogo']
+};
+
+function spritePosition(monstro) {
+  const sprite = monstro && monstro.sprite ? monstro.sprite : { row: 0, col: 0 };
+  const x = (sprite.col / 3) * 100;
+  const y = (sprite.row / 3) * 100;
+  return x + '% ' + y + '%';
+}
+
+function aplicarSprite(elemento, monstro) {
+  elemento.style.backgroundPosition = spritePosition(monstro);
+  elemento.style.boxShadow =
+    '0 18px 36px #0008, inset 0 0 0 3px ' + (monstro.cor || '#ffffff') + '55';
+  elemento.setAttribute('aria-label', monstro.nome + ', tipo ' + monstro.tipo);
+}
+
 function cloneJson(value) {
   return JSON.parse(JSON.stringify(value));
+}
+
+async function validarSprites() {
+  const resposta = await fetch('monster-sprites.svg', { cache: 'no-store' });
+  if (!resposta.ok) throw new Error('Não foi possível carregar as ilustrações dos monstrinhos.');
 }
 
 async function carregarMonstrinhos() {
@@ -278,11 +308,15 @@ function renderizarSelecao() {
     botao.type = 'button';
     botao.className = 'monster-card' + (m.id === selectedId ? ' selected' : '');
     botao.innerHTML =
-      '<div class="monster-icon">' + m.simbolo + '</div>' +
+      '<div class="monster-art" role="img" aria-label="' + m.nome + '"></div>' +
       '<div class="monster-name">' + m.nome + '</div>' +
       '<span class="type">' + m.tipo + '</span>' +
       '<div class="stats"><span>❤️ <b>' + m.vida + '</b></span><span>⚔️ <b>' + m.ataque + '</b></span></div>' +
       '<p class="desc">' + m.descricao + '</p>';
+    const arte = botao.querySelector('.monster-art');
+    arte.style.backgroundPosition = spritePosition(m);
+    arte.style.boxShadow =
+      '0 8px 22px #0005, inset 0 0 0 2px ' + (m.cor || '#ffffff') + '55';
     botao.addEventListener('click', () => {
       selectedId = m.id;
       renderizarSelecao();
@@ -389,12 +423,12 @@ function corHp(percentual) {
 function renderizarBatalha() {
   const p = batalha.jogador;
   const e = batalha.adversario;
-  $('playerIcon').textContent = p.simbolo;
+  aplicarSprite($('playerArt'), p);
   $('playerMonsterName').textContent = p.nome;
-  $('playerType').textContent = p.tipo;
-  $('enemyIcon').textContent = e.simbolo;
+  $('playerType').textContent = p.simbolo + ' ' + p.tipo;
+  aplicarSprite($('enemyArt'), e);
   $('enemyMonsterName').textContent = e.nome;
-  $('enemyType').textContent = e.tipo;
+  $('enemyType').textContent = e.simbolo + ' ' + e.tipo;
   $('turnNumber').textContent = Math.max(1, batalha.turno);
 
   $('playerHpText').textContent = p.hp + ' / ' + p.vida;
@@ -443,15 +477,61 @@ function escolherAtaque(indice) {
   resolver(indice);
 }
 
-function calcularDano(atacante, ataque) {
+function multiplicadorTipo(atacante, defensor) {
+  const fortes = VANTAGENS[atacante.tipo] || [];
+  const fracos = VANTAGENS[defensor.tipo] || [];
+  if (fortes.includes(defensor.tipo)) return 1.25;
+  if (fracos.includes(atacante.tipo)) return 0.85;
+  return 1;
+}
+
+function calcularDano(atacante, defensor, ataque) {
   const variacao = Math.floor(Math.random() * 7) - 3;
-  return Math.max(4, Math.floor(ataque.poder + atacante.ataque * 0.35 + variacao));
+  const tipo = multiplicadorTipo(atacante, defensor);
+  let critico = false;
+  let multCritico = 1;
+
+  if (ataque.efeito === 'critico' && Math.random() < (ataque.chance || 0)) {
+    critico = true;
+    multCritico = ataque.multiplicador || 1.5;
+  }
+
+  const base = ataque.poder + atacante.ataque * 0.35 + variacao;
+  return {
+    dano: Math.max(4, Math.floor(base * tipo * multCritico)),
+    tipo,
+    critico
+  };
 }
 
 function executarAtaque(atacante, defensor, ataque) {
-  const dano = calcularDano(atacante, ataque);
-  defensor.hp = Math.max(0, defensor.hp - dano);
-  adicionarLog('💢 ' + atacante.nome + ' usou ' + ataque.nome + ' e causou ' + dano + ' de dano.');
+  const resultado = calcularDano(atacante, defensor, ataque);
+  defensor.hp = Math.max(0, defensor.hp - resultado.dano);
+
+  adicionarLog(
+    '💢 ' + atacante.nome + ' usou ' + ataque.nome +
+    ' e causou ' + resultado.dano + ' de dano.'
+  );
+
+  if (resultado.tipo > 1) adicionarLog('✨ Foi super efetivo!');
+  if (resultado.tipo < 1) adicionarLog('🛡️ O golpe teve efeito reduzido.');
+  if (resultado.critico) adicionarLog('⚡ Acerto crítico!');
+
+  if (ataque.efeito === 'cura' && atacante.hp > 0) {
+    const antes = atacante.hp;
+    atacante.hp = Math.min(atacante.vida, atacante.hp + (ataque.valor || 0));
+    const recuperado = atacante.hp - antes;
+    if (recuperado > 0) adicionarLog('💚 ' + atacante.nome + ' recuperou ' + recuperado + ' de vida.');
+  }
+
+  if (ataque.efeito === 'dreno' && atacante.hp > 0) {
+    const antes = atacante.hp;
+    const cura = Math.max(1, Math.floor(resultado.dano * (ataque.percentual || 0.25)));
+    atacante.hp = Math.min(atacante.vida, atacante.hp + cura);
+    const recuperado = atacante.hp - antes;
+    if (recuperado > 0) adicionarLog('🌙 ' + atacante.nome + ' drenou ' + recuperado + ' de vida.');
+  }
+
   renderizarBatalha();
 }
 
@@ -548,6 +628,7 @@ function novaBatalha() {
 
 async function iniciarAplicacao() {
   try {
+    await validarSprites();
     await carregarMonstrinhos();
     await carregarHistorico();
     renderizarSelecao();

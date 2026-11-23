@@ -7,19 +7,26 @@
     "vida": 120,
     "ataque": 24,
     "cor": "#ff6b35",
-    "descricao": "Uma criatura veloz que concentra calor nas garras.",
+    "sprite": {
+      "row": 0,
+      "col": 0
+    },
+    "descricao": "Veloz e agressiva, concentra calor nas garras e na cauda flamejante.",
     "ataques": [
       {
         "nome": "Garra Ígnea",
         "categoria": "Rápido",
         "poder": 18,
-        "descricao": "Ataque rápido de fogo."
+        "descricao": "Corte veloz envolto em chamas."
       },
       {
         "nome": "Meteoro Rubro",
         "categoria": "Especial",
         "poder": 29,
-        "descricao": "Golpe forte, porém menos previsível."
+        "descricao": "Explosão flamejante com chance maior de crítico.",
+        "efeito": "critico",
+        "chance": 0.22,
+        "multiplicador": 1.6
       }
     ]
   },
@@ -31,19 +38,25 @@
     "vida": 138,
     "ataque": 20,
     "cor": "#38bdf8",
-    "descricao": "Resistente e equilibrado, usa pressão de água para atacar.",
+    "sprite": {
+      "row": 0,
+      "col": 1
+    },
+    "descricao": "Equilibrado e resistente, usa pressão de água e movimentos fluidos.",
     "ataques": [
       {
         "nome": "Jato Cortante",
         "categoria": "Rápido",
         "poder": 17,
-        "descricao": "Jato de água concentrado."
+        "descricao": "Jato concentrado de água."
       },
       {
-        "nome": "Onda Profunda",
+        "nome": "Maré Restauradora",
         "categoria": "Especial",
-        "poder": 27,
-        "descricao": "Uma onda pesada contra o adversário."
+        "poder": 23,
+        "descricao": "Golpe de água que também recupera vida.",
+        "efeito": "cura",
+        "valor": 10
       }
     ]
   },
@@ -55,7 +68,11 @@
     "vida": 108,
     "ataque": 28,
     "cor": "#facc15",
-    "descricao": "Muito ofensivo, descarrega energia em alta velocidade.",
+    "sprite": {
+      "row": 0,
+      "col": 2
+    },
+    "descricao": "Extremamente ofensivo, descarrega eletricidade pelas asas e pelo corpo.",
     "ataques": [
       {
         "nome": "Faísca Veloz",
@@ -67,7 +84,10 @@
         "nome": "Tempestade Neon",
         "categoria": "Especial",
         "poder": 31,
-        "descricao": "Explosão elétrica de alto impacto."
+        "descricao": "Explosão elétrica com alta chance de crítico.",
+        "efeito": "critico",
+        "chance": 0.25,
+        "multiplicador": 1.55
       }
     ]
   },
@@ -79,19 +99,393 @@
     "vida": 150,
     "ataque": 18,
     "cor": "#4ade80",
-    "descricao": "Tem muita vida e usa raízes e folhas como defesa e ataque.",
+    "sprite": {
+      "row": 0,
+      "col": 3
+    },
+    "descricao": "Guardião robusto coberto por folhas, raízes e galhos vivos.",
     "ataques": [
       {
         "nome": "Chicote de Folhas",
         "categoria": "Rápido",
         "poder": 16,
-        "descricao": "Sequência rápida de folhas."
+        "descricao": "Sequência rápida de folhas afiadas."
       },
       {
-        "nome": "Raiz Colossal",
+        "nome": "Raiz Vital",
+        "categoria": "Especial",
+        "poder": 23,
+        "descricao": "Ataque de raízes que regenera parte da vida.",
+        "efeito": "cura",
+        "valor": 14
+      }
+    ]
+  },
+  {
+    "id": "glacilume",
+    "nome": "Glacilume",
+    "tipo": "Gelo",
+    "simbolo": "❄️",
+    "vida": 122,
+    "ataque": 23,
+    "cor": "#7dd3fc",
+    "sprite": {
+      "row": 1,
+      "col": 0
+    },
+    "descricao": "Espírito de gelo elegante com cristais brilhantes e passos silenciosos.",
+    "ataques": [
+      {
+        "nome": "Estilhaço Boreal",
+        "categoria": "Rápido",
+        "poder": 19,
+        "descricao": "Dispara cristais congelantes."
+      },
+      {
+        "nome": "Aurora Congelante",
+        "categoria": "Especial",
+        "poder": 28,
+        "descricao": "Onda gelada com chance de acerto crítico.",
+        "efeito": "critico",
+        "chance": 0.18,
+        "multiplicador": 1.6
+      }
+    ]
+  },
+  {
+    "id": "terrabull",
+    "nome": "Terrabull",
+    "tipo": "Terra",
+    "simbolo": "⛰️",
+    "vida": 158,
+    "ataque": 19,
+    "cor": "#b7793f",
+    "sprite": {
+      "row": 1,
+      "col": 1
+    },
+    "descricao": "Criatura pesada revestida por placas de rocha e cristais âmbar.",
+    "ataques": [
+      {
+        "nome": "Chifre Rochoso",
+        "categoria": "Rápido",
+        "poder": 18,
+        "descricao": "Investida curta com chifre de pedra."
+      },
+      {
+        "nome": "Abalo Sísmico",
+        "categoria": "Especial",
+        "poder": 27,
+        "descricao": "Golpe pesado que faz o chão estremecer.",
+        "efeito": "critico",
+        "chance": 0.15,
+        "multiplicador": 1.5
+      }
+    ]
+  },
+  {
+    "id": "noctivy",
+    "nome": "Noctivy",
+    "tipo": "Sombra",
+    "simbolo": "🌙",
+    "vida": 116,
+    "ataque": 26,
+    "cor": "#a855f7",
+    "sprite": {
+      "row": 1,
+      "col": 2
+    },
+    "descricao": "Predador noturno com asas de morcego e energia violeta.",
+    "ataques": [
+      {
+        "nome": "Garra Umbral",
+        "categoria": "Rápido",
+        "poder": 19,
+        "descricao": "Ataque rápido vindo das sombras."
+      },
+      {
+        "nome": "Eclipse Voraz",
         "categoria": "Especial",
         "poder": 26,
-        "descricao": "Golpe pesado vindo do solo."
+        "descricao": "Drena parte do dano causado para recuperar vida.",
+        "efeito": "dreno",
+        "percentual": 0.35
+      }
+    ]
+  },
+  {
+    "id": "zephling",
+    "nome": "Zephling",
+    "tipo": "Vento",
+    "simbolo": "🌪️",
+    "vida": 112,
+    "ataque": 25,
+    "cor": "#2dd4bf",
+    "sprite": {
+      "row": 1,
+      "col": 3
+    },
+    "descricao": "Pequeno grifo veloz que controla correntes de ar ao redor das asas.",
+    "ataques": [
+      {
+        "nome": "Corte de Brisa",
+        "categoria": "Rápido",
+        "poder": 19,
+        "descricao": "Lâmina de ar veloz."
+      },
+      {
+        "nome": "Ciclone Celeste",
+        "categoria": "Especial",
+        "poder": 29,
+        "descricao": "Redemoinho aéreo com chance de crítico.",
+        "efeito": "critico",
+        "chance": 0.2,
+        "multiplicador": 1.55
+      }
+    ]
+  },
+  {
+    "id": "pyronix",
+    "nome": "Pyronix",
+    "tipo": "Fogo",
+    "simbolo": "🔥",
+    "vida": 126,
+    "ataque": 27,
+    "cor": "#f97316",
+    "sprite": {
+      "row": 2,
+      "col": 0
+    },
+    "descricao": "Leão-águia de fogo com juba ardente e postura heroica.",
+    "ataques": [
+      {
+        "nome": "Asa Incendiária",
+        "categoria": "Rápido",
+        "poder": 20,
+        "descricao": "Golpe de asa coberto por chamas."
+      },
+      {
+        "nome": "Rugido Solar",
+        "categoria": "Especial",
+        "poder": 32,
+        "descricao": "Explosão solar com chance elevada de crítico.",
+        "efeito": "critico",
+        "chance": 0.23,
+        "multiplicador": 1.6
+      }
+    ]
+  },
+  {
+    "id": "tiderra",
+    "nome": "Tiderra",
+    "tipo": "Água",
+    "simbolo": "💧",
+    "vida": 148,
+    "ataque": 21,
+    "cor": "#0ea5e9",
+    "sprite": {
+      "row": 2,
+      "col": 1
+    },
+    "descricao": "Guardião anfíbio de casco oceânico e temperamento sereno.",
+    "ataques": [
+      {
+        "nome": "Maré Cascata",
+        "categoria": "Rápido",
+        "poder": 18,
+        "descricao": "Onda curta de alta pressão."
+      },
+      {
+        "nome": "Casco Oceânico",
+        "categoria": "Especial",
+        "poder": 25,
+        "descricao": "Golpe pesado que também recupera vida.",
+        "efeito": "cura",
+        "valor": 12
+      }
+    ]
+  },
+  {
+    "id": "sparkoon",
+    "nome": "Sparkoon",
+    "tipo": "Elétrico",
+    "simbolo": "⚡",
+    "vida": 110,
+    "ataque": 29,
+    "cor": "#eab308",
+    "sprite": {
+      "row": 2,
+      "col": 2
+    },
+    "descricao": "Criatura elétrica brincalhona com anéis luminosos na cauda.",
+    "ataques": [
+      {
+        "nome": "Choque Saltitante",
+        "categoria": "Rápido",
+        "poder": 21,
+        "descricao": "Ataque elétrico rápido em salto."
+      },
+      {
+        "nome": "Cauda Tesla",
+        "categoria": "Especial",
+        "poder": 30,
+        "descricao": "Descarga pelos anéis da cauda com alta chance de crítico.",
+        "efeito": "critico",
+        "chance": 0.3,
+        "multiplicador": 1.5
+      }
+    ]
+  },
+  {
+    "id": "floracorn",
+    "nome": "Floracorn",
+    "tipo": "Natureza",
+    "simbolo": "🌸",
+    "vida": 142,
+    "ataque": 20,
+    "cor": "#65a30d",
+    "sprite": {
+      "row": 2,
+      "col": 3
+    },
+    "descricao": "Cervo encantado coberto por flores, cipós e energia natural.",
+    "ataques": [
+      {
+        "nome": "Lança de Pétalas",
+        "categoria": "Rápido",
+        "poder": 18,
+        "descricao": "Rajada de pétalas afiadas."
+      },
+      {
+        "nome": "Jardim Luminoso",
+        "categoria": "Especial",
+        "poder": 22,
+        "descricao": "Ataque natural que recupera bastante vida.",
+        "efeito": "cura",
+        "valor": 18
+      }
+    ]
+  },
+  {
+    "id": "frostuff",
+    "nome": "Frostuff",
+    "tipo": "Gelo",
+    "simbolo": "❄️",
+    "vida": 152,
+    "ataque": 19,
+    "cor": "#60a5fa",
+    "sprite": {
+      "row": 3,
+      "col": 0
+    },
+    "descricao": "Filhote ártico resistente protegido por espinhos de cristal.",
+    "ataques": [
+      {
+        "nome": "Mordida Glacial",
+        "categoria": "Rápido",
+        "poder": 17,
+        "descricao": "Mordida coberta por gelo."
+      },
+      {
+        "nome": "Avalanche de Cristal",
+        "categoria": "Especial",
+        "poder": 27,
+        "descricao": "Queda de cristais com chance de crítico.",
+        "efeito": "critico",
+        "chance": 0.16,
+        "multiplicador": 1.6
+      }
+    ]
+  },
+  {
+    "id": "boulderox",
+    "nome": "Boulderox",
+    "tipo": "Terra",
+    "simbolo": "⛰️",
+    "vida": 165,
+    "ataque": 22,
+    "cor": "#92400e",
+    "sprite": {
+      "row": 3,
+      "col": 1
+    },
+    "descricao": "Besta maciça de pedra, chifres e cristais minerais.",
+    "ataques": [
+      {
+        "nome": "Investida Granítica",
+        "categoria": "Rápido",
+        "poder": 19,
+        "descricao": "Avanço pesado usando placas de pedra."
+      },
+      {
+        "nome": "Impacto Âmbar",
+        "categoria": "Especial",
+        "poder": 29,
+        "descricao": "Explosão de cristais âmbar com chance de crítico.",
+        "efeito": "critico",
+        "chance": 0.18,
+        "multiplicador": 1.55
+      }
+    ]
+  },
+  {
+    "id": "umbrawl",
+    "nome": "Umbrawl",
+    "tipo": "Sombra",
+    "simbolo": "🌙",
+    "vida": 124,
+    "ataque": 28,
+    "cor": "#7e22ce",
+    "sprite": {
+      "row": 3,
+      "col": 2
+    },
+    "descricao": "Lobo alado envolto em fumaça sombria e energia violeta.",
+    "ataques": [
+      {
+        "nome": "Presa Sombria",
+        "categoria": "Rápido",
+        "poder": 20,
+        "descricao": "Mordida veloz feita de energia escura."
+      },
+      {
+        "nome": "Véu Devorador",
+        "categoria": "Especial",
+        "poder": 27,
+        "descricao": "Ataque sombrio que drena vida do adversário.",
+        "efeito": "dreno",
+        "percentual": 0.4
+      }
+    ]
+  },
+  {
+    "id": "galeaf",
+    "nome": "Galeaf",
+    "tipo": "Vento",
+    "simbolo": "🍃",
+    "vida": 118,
+    "ataque": 26,
+    "cor": "#14b8a6",
+    "sprite": {
+      "row": 3,
+      "col": 3
+    },
+    "descricao": "Raposa-ave de penas folhadas, leve e extremamente veloz.",
+    "ataques": [
+      {
+        "nome": "Lâmina de Ar",
+        "categoria": "Rápido",
+        "poder": 20,
+        "descricao": "Corte de vento comprimido."
+      },
+      {
+        "nome": "Tormenta Foliar",
+        "categoria": "Especial",
+        "poder": 29,
+        "descricao": "Furacão de folhas com chance de crítico.",
+        "efeito": "critico",
+        "chance": 0.22,
+        "multiplicador": 1.55
       }
     ]
   }
