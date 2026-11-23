@@ -55,12 +55,21 @@ jobs:
           with open("app/src/main/assets/monstrinhos.json", encoding="utf-8") as f:
               monsters = json.load(f)
 
-          assert len(monsters) >= 3, "O projeto precisa ter pelo menos 3 criaturas."
+          assert len(monsters) == 16, "O jogo deve conter exatamente 16 criaturas ilustradas."
+          assert __import__("os").path.exists("app/src/main/assets/monster-sprites.svg")
+          assert __import__("os").path.exists("monster-sprites.svg")
+
           for monster in monsters:
               assert monster["nome"]
               assert monster["vida"] > 0
               assert monster["ataque"] > 0
-              assert len(monster["ataques"]) >= 2
+              assert len(monster["ataques"]) == 2
+              assert "sprite" in monster
+              assert 0 <= monster["sprite"]["row"] <= 3
+              assert 0 <= monster["sprite"]["col"] <= 3
+              for golpe in monster["ataques"]:
+                  assert golpe["nome"]
+                  assert golpe["poder"] > 0
 
           with open("app/src/main/assets/historico.json", encoding="utf-8") as f:
               history = json.load(f)
