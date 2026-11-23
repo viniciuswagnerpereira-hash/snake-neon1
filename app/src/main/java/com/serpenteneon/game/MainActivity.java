@@ -158,7 +158,27 @@ public final class MainActivity extends Activity {
             "document.querySelectorAll('.attack').length===4 && " +
             "getComputedStyle(document.getElementById('playerArt')).backgroundImage.includes('monster-sprites.svg');" +
             "})()",
-            value -> Log.i(TAG, "GAME_START=" + value)
+            value -> {
+                Log.i(TAG, "GAME_START=" + value);
+                if ("true".equals(value)) {
+                    view.postDelayed(() -> {
+                        view.evaluateJavascript(
+                            "(function(){var b=document.querySelector('.attack');if(!b)return false;b.click();return true;})()",
+                            clicked -> {
+                                if (!"true".equals(clicked)) {
+                                    Log.e(TAG, "ATTACK_FX=false");
+                                    return;
+                                }
+                                view.postDelayed(() -> view.evaluateJavascript(
+                                    "(function(){return !!document.querySelector('.attack-effect') || " +
+                                    "!!document.querySelector('.fx-attack');})()",
+                                    fx -> Log.i(TAG, "ATTACK_FX=" + fx)
+                                ), 120);
+                            }
+                        );
+                    }, 250);
+                }
+            }
         );
     }
 
