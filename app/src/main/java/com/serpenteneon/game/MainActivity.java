@@ -155,7 +155,7 @@ public final class MainActivity extends Activity {
             "card.click();" +
             "start.click();" +
             "return document.getElementById('battleScreen').classList.contains('active') && " +
-            "document.querySelectorAll('.attack').length===2 && " +
+            "document.querySelectorAll('.attack').length===4 && " +
             "getComputedStyle(document.getElementById('playerArt')).backgroundImage.includes('monster-sprites.svg');" +
             "})()",
             value -> Log.i(TAG, "GAME_START=" + value)
