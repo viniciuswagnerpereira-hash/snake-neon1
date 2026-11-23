@@ -167,6 +167,7 @@ jobs:
             adb shell dumpsys activity activities | grep -q 'com.serpenteneon.game/.MainActivity'
 
             grep -q 'DOM_READY=true' runtime-logcat.txt
+            grep -q 'PORTRAIT_READY=true' runtime-logcat.txt
             grep -q 'GAME_START=true' runtime-logcat.txt
 
             ! grep -q 'JS_ERROR=' runtime-logcat.txt
