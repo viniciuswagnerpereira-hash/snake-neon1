@@ -72,7 +72,7 @@ public final class MainActivity extends Activity {
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
                 Log.i(TAG, "PAGE_READY url=" + url);
-                view.postDelayed(() -> probeAppReady(view, 0), 500);
+                view.postDelayed(() -> injectRuntimeProbe(view), 500);
             }
         });
 
@@ -110,76 +110,49 @@ public final class MainActivity extends Activity {
         webView.loadUrl(APP_URL);
     }
 
-    private void probeAppReady(WebView view, int attempt) {
-        view.evaluateJavascript(
-            "window.appReady===true",
-            ready -> {
-                if ("true".equals(ready)) {
-                    view.evaluateJavascript(
-                        "(function(){return !!document.getElementById('monsterGrid') && " +
-                        "document.querySelectorAll('.monster-card').length===16 && " +
-                        "getComputedStyle(document.querySelector('.monster-art')).backgroundImage.includes('monster-sprites.svg');})()",
-                        value -> Log.i(TAG, "DOM_READY=" + value)
-                    );
-
-                    view.evaluateJavascript(
-                        "window.innerHeight > window.innerWidth",
-                        value -> Log.i(TAG, "PORTRAIT_READY=" + value)
-                    );
-
-                    if (smokeTest) {
-                        view.postDelayed(() -> runBattleSmokeTest(view), 350);
-                    }
-                    return;
-                }
-
-                if (attempt < 15) {
-                    view.postDelayed(() -> probeAppReady(view, attempt + 1), 500);
-                } else {
-                    Log.e(TAG, "DOM_READY=false");
-                    if (smokeTest) Log.e(TAG, "GAME_START=false");
-                }
-            }
-        );
-    }
-
-    private void runBattleSmokeTest(WebView view) {
-        view.evaluateJavascript(
+    private void injectRuntimeProbe(WebView view) {
+        String smoke = smokeTest ? "true" : "false";
+        String script =
             "(function(){" +
+            "var tries=0;" +
+            "function probe(){" +
+            "if(window.appReady!==true){" +
+            "if(tries++<40){setTimeout(probe,250);return;}" +
+            "console.log('DOM_READY=false');" +
+            "return;" +
+            "}" +
+            "var dom=!!document.getElementById('monsterGrid')&&" +
+            "document.querySelectorAll('.monster-card').length===16&&" +
+            "getComputedStyle(document.querySelector('.monster-art')).backgroundImage.includes('monster-sprites.svg');" +
+            "console.log('DOM_READY='+dom);" +
+            "console.log('PORTRAIT_READY='+(window.innerHeight>window.innerWidth));" +
+            "if(!" + smoke + ")return;" +
             "var n=document.getElementById('trainerName');" +
             "var card=document.querySelector('.monster-card');" +
             "var start=document.getElementById('startBattleBtn');" +
-            "if(!n||!card||!start)return false;" +
+            "if(!n||!card||!start){console.log('GAME_START=false');return;}" +
             "n.value='CI_SMOKE';" +
             "n.dispatchEvent(new Event('input',{bubbles:true}));" +
             "card.click();" +
             "start.click();" +
-            "return document.getElementById('battleScreen').classList.contains('active') && " +
-            "document.querySelectorAll('.attack').length===4 && " +
+            "var game=document.getElementById('battleScreen').classList.contains('active')&&" +
+            "document.querySelectorAll('.attack').length===4&&" +
             "getComputedStyle(document.getElementById('playerArt')).backgroundImage.includes('monster-sprites.svg');" +
-            "})()",
-            value -> {
-                Log.i(TAG, "GAME_START=" + value);
-                if ("true".equals(value)) {
-                    view.postDelayed(() -> {
-                        view.evaluateJavascript(
-                            "(function(){var b=document.querySelector('.attack');if(!b)return false;b.click();return true;})()",
-                            clicked -> {
-                                if (!"true".equals(clicked)) {
-                                    Log.e(TAG, "ATTACK_FX=false");
-                                    return;
-                                }
-                                view.postDelayed(() -> view.evaluateJavascript(
-                                    "(function(){return !!document.querySelector('.attack-effect') || " +
-                                    "!!document.querySelector('.fx-attack');})()",
-                                    fx -> Log.i(TAG, "ATTACK_FX=" + fx)
-                                ), 120);
-                            }
-                        );
-                    }, 250);
-                }
-            }
-        );
+            "console.log('GAME_START='+game);" +
+            "if(!game)return;" +
+            "setTimeout(function(){" +
+            "var attack=document.querySelector('.attack');" +
+            "if(!attack){console.log('ATTACK_FX=false');return;}" +
+            "attack.click();" +
+            "setTimeout(function(){" +
+            "var fx=!!document.querySelector('.attack-effect')||!!document.querySelector('.fx-attack');" +
+            "console.log('ATTACK_FX='+fx);" +
+            "},120);" +
+            "},250);" +
+            "}" +
+            "probe();" +
+            "})();";
+        view.evaluateJavascript(script, null);
     }
 
     private final class HistoryBridge {
