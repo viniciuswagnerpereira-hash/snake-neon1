@@ -1,0 +1,98 @@
+[
+  {
+    "id": "flamora",
+    "nome": "Flamora",
+    "tipo": "Fogo",
+    "simbolo": "🔥",
+    "vida": 120,
+    "ataque": 24,
+    "cor": "#ff6b35",
+    "descricao": "Uma criatura veloz que concentra calor nas garras.",
+    "ataques": [
+      {
+        "nome": "Garra Ígnea",
+        "categoria": "Rápido",
+        "poder": 18,
+        "descricao": "Ataque rápido de fogo."
+      },
+      {
+        "nome": "Meteoro Rubro",
+        "categoria": "Especial",
+        "poder": 29,
+        "descricao": "Golpe forte, porém menos previsível."
+      }
+    ]
+  },
+  {
+    "id": "aquavelo",
+    "nome": "Aquavelo",
+    "tipo": "Água",
+    "simbolo": "💧",
+    "vida": 138,
+    "ataque": 20,
+    "cor": "#38bdf8",
+    "descricao": "Resistente e equilibrado, usa pressão de água para atacar.",
+    "ataques": [
+      {
+        "nome": "Jato Cortante",
+        "categoria": "Rápido",
+        "poder": 17,
+        "descricao": "Jato de água concentrado."
+      },
+      {
+        "nome": "Onda Profunda",
+        "categoria": "Especial",
+        "poder": 27,
+        "descricao": "Uma onda pesada contra o adversário."
+      }
+    ]
+  },
+  {
+    "id": "voltrix",
+    "nome": "Voltrix",
+    "tipo": "Elétrico",
+    "simbolo": "⚡",
+    "vida": 108,
+    "ataque": 28,
+    "cor": "#facc15",
+    "descricao": "Muito ofensivo, descarrega energia em alta velocidade.",
+    "ataques": [
+      {
+        "nome": "Faísca Veloz",
+        "categoria": "Rápido",
+        "poder": 20,
+        "descricao": "Descarga curta e rápida."
+      },
+      {
+        "nome": "Tempestade Neon",
+        "categoria": "Especial",
+        "poder": 31,
+        "descricao": "Explosão elétrica de alto impacto."
+      }
+    ]
+  },
+  {
+    "id": "verdantis",
+    "nome": "Verdantis",
+    "tipo": "Natureza",
+    "simbolo": "🌿",
+    "vida": 150,
+    "ataque": 18,
+    "cor": "#4ade80",
+    "descricao": "Tem muita vida e usa raízes e folhas como defesa e ataque.",
+    "ataques": [
+      {
+        "nome": "Chicote de Folhas",
+        "categoria": "Rápido",
+        "poder": 16,
+        "descricao": "Sequência rápida de folhas."
+      },
+      {
+        "nome": "Raiz Colossal",
+        "categoria": "Especial",
+        "poder": 26,
+        "descricao": "Golpe pesado vindo do solo."
+      }
+    ]
+  }
+]
