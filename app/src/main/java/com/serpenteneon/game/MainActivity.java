@@ -11,19 +11,29 @@ import android.view.WindowInsets;
 import android.view.WindowInsetsController;
 import android.view.WindowManager;
 import android.webkit.ConsoleMessage;
+import android.webkit.JavascriptInterface;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebResourceResponse;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
-
-import androidx.webkit.WebViewAssetLoader;
 import android.webkit.WebViewClient;
 
+import androidx.webkit.WebViewAssetLoader;
+
+import org.json.JSONObject;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+
 public final class MainActivity extends Activity {
-    private static final String TAG = "SerpenteNeon";
+    private static final String TAG = "ArenaMonstrinhos";
     private static final String APP_URL =
         "https://appassets.androidplatform.net/assets/index.html";
+    private static final String HISTORY_FILE = "historico.json";
 
     private WebView webView;
     private boolean smokeTest;
@@ -40,7 +50,9 @@ public final class MainActivity extends Activity {
             .build();
 
         webView = new WebView(this);
-        webView.setBackgroundColor(0xFF060814);
+        webView.setBackgroundColor(0xFF111827);
+        webView.addJavascriptInterface(new HistoryBridge(), "HistoricoAndroid");
+
         webView.setWebViewClient(new WebViewClient() {
             @Override
             public WebResourceResponse shouldInterceptRequest(
@@ -61,26 +73,36 @@ public final class MainActivity extends Activity {
                 super.onPageFinished(view, url);
                 Log.i(TAG, "PAGE_READY url=" + url);
 
-                view.evaluateJavascript(
-                    "(function(){return !!document.getElementById('game') && " +
-                    "!!document.getElementById('playBtn');})()",
-                    value -> Log.i(TAG, "DOM_READY=" + value)
-                );
+                view.postDelayed(() -> {
+                    view.evaluateJavascript(
+                        "(function(){return window.appReady===true && " +
+                        "!!document.getElementById('monsterGrid') && " +
+                        "document.querySelectorAll('.monster-card').length>=3;})()",
+                        value -> Log.i(TAG, "DOM_READY=" + value)
+                    );
+                }, 900);
 
                 if (smokeTest) {
-                    view.evaluateJavascript(
-                        "(function(){" +
-                        "var n=document.getElementById('nick');" +
-                        "var b=document.getElementById('playBtn');" +
-                        "if(!n||!b)return false;" +
-                        "n.value='CI_SMOKE';b.click();" +
-                        "return document.getElementById('start').hidden===true;" +
-                        "})()",
-                        value -> Log.i(TAG, "GAME_START=" + value)
-                    );
+                    view.postDelayed(() -> {
+                        view.evaluateJavascript(
+                            "(function(){" +
+                            "if(window.appReady!==true)return false;" +
+                            "var n=document.getElementById('trainerName');" +
+                            "var card=document.querySelector('.monster-card');" +
+                            "var start=document.getElementById('startBattleBtn');" +
+                            "if(!n||!card||!start)return false;" +
+                            "n.value='CI_SMOKE';" +
+                            "n.dispatchEvent(new Event('input',{bubbles:true}));" +
+                            "card.click();" +
+                            "start.click();" +
+                            "return document.getElementById('battleScreen').classList.contains('active') && " +
+                            "document.querySelectorAll('.attack').length===2;" +
+                            "})()",
+                            value -> Log.i(TAG, "GAME_START=" + value)
+                        );
+                    }, 1400);
                 }
             }
-
         });
 
         webView.setWebChromeClient(new WebChromeClient() {
@@ -115,6 +137,59 @@ public final class MainActivity extends Activity {
         setContentView(webView);
         webView.post(this::hideSystemUi);
         webView.loadUrl(APP_URL);
+    }
+
+    private final class HistoryBridge {
+        @JavascriptInterface
+        public String carregar() {
+            try {
+                File arquivo = garantirHistorico();
+                FileInputStream input = new FileInputStream(arquivo);
+                byte[] dados = new byte[(int) arquivo.length()];
+                int lidos = input.read(dados);
+                input.close();
+                if (lidos <= 0) return "{\"batalhas\":[]}";
+                return new String(dados, 0, lidos, StandardCharsets.UTF_8);
+            } catch (Exception e) {
+                Log.e(TAG, "HISTORY_READ_ERROR", e);
+                return "{\"batalhas\":[]}";
+            }
+        }
+
+        @JavascriptInterface
+        public boolean salvar(String json) {
+            try {
+                // Valida que o texto recebido é JSON antes de gravar historico.json.
+                new JSONObject(json);
+                File arquivo = new File(getFilesDir(), HISTORY_FILE);
+                FileOutputStream output = new FileOutputStream(arquivo, false);
+                output.write(json.getBytes(StandardCharsets.UTF_8));
+                output.flush();
+                output.close();
+                Log.i(TAG, "HISTORY_SAVED path=" + arquivo.getAbsolutePath());
+                return true;
+            } catch (Exception e) {
+                Log.e(TAG, "HISTORY_WRITE_ERROR", e);
+                return false;
+            }
+        }
+    }
+
+    private File garantirHistorico() throws Exception {
+        File destino = new File(getFilesDir(), HISTORY_FILE);
+        if (destino.exists()) return destino;
+
+        InputStream origem = getAssets().open(HISTORY_FILE);
+        FileOutputStream output = new FileOutputStream(destino);
+        byte[] buffer = new byte[4096];
+        int lidos;
+        while ((lidos = origem.read(buffer)) != -1) {
+            output.write(buffer, 0, lidos);
+        }
+        output.flush();
+        output.close();
+        origem.close();
+        return destino;
     }
 
     private void hideSystemUi() {
