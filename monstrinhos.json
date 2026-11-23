@@ -27,6 +27,21 @@
         "efeito": "critico",
         "chance": 0.22,
         "multiplicador": 1.6
+      },
+      {
+        "nome": "Chama Circular",
+        "categoria": "Tático",
+        "poder": 23,
+        "descricao": "Uma explosão de fogo em arco ao redor do alvo."
+      },
+      {
+        "nome": "Fênix Escarlate",
+        "categoria": "Supremo",
+        "poder": 35,
+        "descricao": "Ataque flamejante de alto impacto com chance de crítico.",
+        "efeito": "critico",
+        "chance": 0.18,
+        "multiplicador": 1.8
       }
     ]
   },
@@ -57,6 +72,23 @@
         "descricao": "Golpe de água que também recupera vida.",
         "efeito": "cura",
         "valor": 10
+      },
+      {
+        "nome": "Corrente Revigorante",
+        "categoria": "Tático",
+        "poder": 16,
+        "descricao": "Corrente de água que machuca e recupera vida.",
+        "efeito": "cura",
+        "valor": 14
+      },
+      {
+        "nome": "Tsunami Azul",
+        "categoria": "Supremo",
+        "poder": 32,
+        "descricao": "Uma grande onda de pressão com chance de crítico.",
+        "efeito": "critico",
+        "chance": 0.16,
+        "multiplicador": 1.65
       }
     ]
   },
@@ -88,6 +120,21 @@
         "efeito": "critico",
         "chance": 0.25,
         "multiplicador": 1.55
+      },
+      {
+        "nome": "Pulso Voltaico",
+        "categoria": "Tático",
+        "poder": 24,
+        "descricao": "Pulso elétrico concentrado que atravessa o campo."
+      },
+      {
+        "nome": "Raio Ômega",
+        "categoria": "Supremo",
+        "poder": 36,
+        "descricao": "Descarga máxima com grande chance de crítico.",
+        "efeito": "critico",
+        "chance": 0.2,
+        "multiplicador": 1.7
       }
     ]
   },
@@ -118,6 +165,23 @@
         "descricao": "Ataque de raízes que regenera parte da vida.",
         "efeito": "cura",
         "valor": 14
+      },
+      {
+        "nome": "Semente Restauradora",
+        "categoria": "Tático",
+        "poder": 14,
+        "descricao": "Sementes mágicas atacam e restauram bastante vida.",
+        "efeito": "cura",
+        "valor": 20
+      },
+      {
+        "nome": "Floresta Ancestral",
+        "categoria": "Supremo",
+        "poder": 30,
+        "descricao": "Raízes gigantes surgem por todo o campo.",
+        "efeito": "critico",
+        "chance": 0.14,
+        "multiplicador": 1.55
       }
     ]
   },
@@ -149,6 +213,21 @@
         "efeito": "critico",
         "chance": 0.18,
         "multiplicador": 1.6
+      },
+      {
+        "nome": "Névoa Polar",
+        "categoria": "Tático",
+        "poder": 22,
+        "descricao": "Uma névoa congelante envolve o adversário."
+      },
+      {
+        "nome": "Cometa de Gelo",
+        "categoria": "Supremo",
+        "poder": 33,
+        "descricao": "Cristal colossal cai sobre o alvo com chance de crítico.",
+        "efeito": "critico",
+        "chance": 0.18,
+        "multiplicador": 1.7
       }
     ]
   },
@@ -180,6 +259,21 @@
         "efeito": "critico",
         "chance": 0.15,
         "multiplicador": 1.5
+      },
+      {
+        "nome": "Pisada Rochosa",
+        "categoria": "Tático",
+        "poder": 23,
+        "descricao": "Uma pisada que lança pedras contra o alvo."
+      },
+      {
+        "nome": "Ruptura Continental",
+        "categoria": "Supremo",
+        "poder": 34,
+        "descricao": "O chão se parte em um impacto devastador.",
+        "efeito": "critico",
+        "chance": 0.17,
+        "multiplicador": 1.65
       }
     ]
   },
@@ -210,6 +304,23 @@
         "descricao": "Drena parte do dano causado para recuperar vida.",
         "efeito": "dreno",
         "percentual": 0.35
+      },
+      {
+        "nome": "Sussurro Noturno",
+        "categoria": "Tático",
+        "poder": 21,
+        "descricao": "Energia sombria ataca e drena parte da vida.",
+        "efeito": "dreno",
+        "percentual": 0.28
+      },
+      {
+        "nome": "Lua Negra",
+        "categoria": "Supremo",
+        "poder": 33,
+        "descricao": "Uma esfera de sombra explode sobre o inimigo.",
+        "efeito": "critico",
+        "chance": 0.2,
+        "multiplicador": 1.7
       }
     ]
   },
@@ -241,6 +352,21 @@
         "efeito": "critico",
         "chance": 0.2,
         "multiplicador": 1.55
+      },
+      {
+        "nome": "Rajada Espiral",
+        "categoria": "Tático",
+        "poder": 22,
+        "descricao": "Uma espiral de vento empurra e corta o alvo."
+      },
+      {
+        "nome": "Furacão Supremo",
+        "categoria": "Supremo",
+        "poder": 34,
+        "descricao": "Um furacão concentrado com chance de crítico.",
+        "efeito": "critico",
+        "chance": 0.18,
+        "multiplicador": 1.7
       }
     ]
   },
@@ -272,6 +398,21 @@
         "efeito": "critico",
         "chance": 0.23,
         "multiplicador": 1.6
+      },
+      {
+        "nome": "Pluma Ardente",
+        "categoria": "Tático",
+        "poder": 23,
+        "descricao": "Penas em chamas atingem o adversário em sequência."
+      },
+      {
+        "nome": "Coroa Solar",
+        "categoria": "Supremo",
+        "poder": 36,
+        "descricao": "Explosão solar de enorme intensidade.",
+        "efeito": "critico",
+        "chance": 0.19,
+        "multiplicador": 1.75
       }
     ]
   },
@@ -302,6 +443,23 @@
         "descricao": "Golpe pesado que também recupera vida.",
         "efeito": "cura",
         "valor": 12
+      },
+      {
+        "nome": "Bolha Vital",
+        "categoria": "Tático",
+        "poder": 15,
+        "descricao": "Bolhas energizadas causam dano e recuperam vida.",
+        "efeito": "cura",
+        "valor": 16
+      },
+      {
+        "nome": "Dilúvio Ancestral",
+        "categoria": "Supremo",
+        "poder": 32,
+        "descricao": "Uma corrente oceânica gigantesca cobre a arena.",
+        "efeito": "critico",
+        "chance": 0.16,
+        "multiplicador": 1.65
       }
     ]
   },
@@ -333,6 +491,21 @@
         "efeito": "critico",
         "chance": 0.3,
         "multiplicador": 1.5
+      },
+      {
+        "nome": "Anel Voltaico",
+        "categoria": "Tático",
+        "poder": 23,
+        "descricao": "Os anéis da cauda disparam ondas elétricas."
+      },
+      {
+        "nome": "Sobrecarga Tesla",
+        "categoria": "Supremo",
+        "poder": 35,
+        "descricao": "Acumula energia até descarregar tudo de uma vez.",
+        "efeito": "critico",
+        "chance": 0.22,
+        "multiplicador": 1.65
       }
     ]
   },
@@ -363,6 +536,20 @@
         "descricao": "Ataque natural que recupera bastante vida.",
         "efeito": "cura",
         "valor": 18
+      },
+      {
+        "nome": "Espinhos Florais",
+        "categoria": "Tático",
+        "poder": 21,
+        "descricao": "Espinhos cobertos por pétalas atingem o alvo."
+      },
+      {
+        "nome": "Bênção da Primavera",
+        "categoria": "Supremo",
+        "poder": 18,
+        "descricao": "Energia natural ataca e recupera muita vida.",
+        "efeito": "cura",
+        "valor": 22
       }
     ]
   },
@@ -394,6 +581,21 @@
         "efeito": "critico",
         "chance": 0.16,
         "multiplicador": 1.6
+      },
+      {
+        "nome": "Sopro Branco",
+        "categoria": "Tático",
+        "poder": 21,
+        "descricao": "Rajada congelante lançada em alta velocidade."
+      },
+      {
+        "nome": "Zero Absoluto",
+        "categoria": "Supremo",
+        "poder": 33,
+        "descricao": "Congela o campo em um impacto crítico.",
+        "efeito": "critico",
+        "chance": 0.18,
+        "multiplicador": 1.7
       }
     ]
   },
@@ -425,6 +627,21 @@
         "efeito": "critico",
         "chance": 0.18,
         "multiplicador": 1.55
+      },
+      {
+        "nome": "Chuva de Pedras",
+        "categoria": "Tático",
+        "poder": 22,
+        "descricao": "Fragmentos de rocha caem sobre o adversário."
+      },
+      {
+        "nome": "Colapso Mineral",
+        "categoria": "Supremo",
+        "poder": 35,
+        "descricao": "Cristais e pedras explodem em uma onda pesada.",
+        "efeito": "critico",
+        "chance": 0.18,
+        "multiplicador": 1.7
       }
     ]
   },
@@ -455,6 +672,23 @@
         "descricao": "Ataque sombrio que drena vida do adversário.",
         "efeito": "dreno",
         "percentual": 0.4
+      },
+      {
+        "nome": "Névoa Vampírica",
+        "categoria": "Tático",
+        "poder": 20,
+        "descricao": "Névoa sombria causa dano e drena vida.",
+        "efeito": "dreno",
+        "percentual": 0.32
+      },
+      {
+        "nome": "Eclipse Total",
+        "categoria": "Supremo",
+        "poder": 34,
+        "descricao": "A arena escurece antes de um golpe devastador.",
+        "efeito": "critico",
+        "chance": 0.2,
+        "multiplicador": 1.7
       }
     ]
   },
@@ -486,6 +720,21 @@
         "efeito": "critico",
         "chance": 0.22,
         "multiplicador": 1.55
+      },
+      {
+        "nome": "Passo de Vendaval",
+        "categoria": "Tático",
+        "poder": 22,
+        "descricao": "Avança junto de uma lâmina de vento."
+      },
+      {
+        "nome": "Céu Rasgante",
+        "categoria": "Supremo",
+        "poder": 34,
+        "descricao": "Uma tempestade de vento corta toda a arena.",
+        "efeito": "critico",
+        "chance": 0.18,
+        "multiplicador": 1.7
       }
     ]
   }
