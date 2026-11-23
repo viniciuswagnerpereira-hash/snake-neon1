@@ -77,7 +77,8 @@ public final class MainActivity extends Activity {
                     view.evaluateJavascript(
                         "(function(){return window.appReady===true && " +
                         "!!document.getElementById('monsterGrid') && " +
-                        "document.querySelectorAll('.monster-card').length>=3;})()",
+                        "document.querySelectorAll('.monster-card').length===16 && " +
+                        "getComputedStyle(document.querySelector('.monster-art')).backgroundImage.includes('monster-sprites.svg');})()",
                         value -> Log.i(TAG, "DOM_READY=" + value)
                     );
                 }, 900);
@@ -96,7 +97,8 @@ public final class MainActivity extends Activity {
                             "card.click();" +
                             "start.click();" +
                             "return document.getElementById('battleScreen').classList.contains('active') && " +
-                            "document.querySelectorAll('.attack').length===2;" +
+                            "document.querySelectorAll('.attack').length===2 && " +
+                            "getComputedStyle(document.getElementById('playerArt')).backgroundImage.includes('monster-sprites.svg');" +
                             "})()",
                             value -> Log.i(TAG, "GAME_START=" + value)
                         );
