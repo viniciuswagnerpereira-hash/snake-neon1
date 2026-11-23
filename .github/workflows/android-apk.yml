@@ -169,6 +169,7 @@ jobs:
             grep -q 'DOM_READY=true' runtime-logcat.txt
             grep -q 'PORTRAIT_READY=true' runtime-logcat.txt
             grep -q 'GAME_START=true' runtime-logcat.txt
+            grep -q 'ATTACK_FX=true' runtime-logcat.txt
 
             ! grep -q 'JS_ERROR=' runtime-logcat.txt
             ! grep -q 'FATAL EXCEPTION' runtime-logcat.txt
