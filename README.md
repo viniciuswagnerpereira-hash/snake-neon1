@@ -96,3 +96,15 @@ O jogo utiliza um sprite sheet próprio em `monster-sprites.svg` com 16 criatura
 - Galeaf — Vento
 
 Cada criatura possui dois golpes próprios. Alguns golpes têm efeitos especiais como cura, drenagem de vida ou chance aumentada de acerto crítico. O sistema também considera vantagens entre tipos.
+
+
+## Efeitos de ataque
+
+Cada monstrinho possui 4 golpes. Durante a batalha:
+- o atacante avança com animação;
+- o defensor treme no impacto;
+- partículas diferentes aparecem para Fogo, Água, Elétrico, Natureza, Gelo, Terra, Sombra e Vento;
+- o dano aparece sobre o alvo;
+- golpes de cura e dreno possuem brilho especial.
+
+Esses efeitos são feitos em CSS/JavaScript e funcionam offline dentro do APK.

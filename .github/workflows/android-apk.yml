@@ -63,7 +63,7 @@ jobs:
               assert monster["nome"]
               assert monster["vida"] > 0
               assert monster["ataque"] > 0
-              assert len(monster["ataques"]) == 2
+              assert len(monster["ataques"]) == 4
               assert "sprite" in monster
               assert 0 <= monster["sprite"]["row"] <= 3
               assert 0 <= monster["sprite"]["col"] <= 3
@@ -169,6 +169,7 @@ jobs:
             grep -q 'DOM_READY=true' runtime-logcat.txt
             grep -q 'PORTRAIT_READY=true' runtime-logcat.txt
             grep -q 'GAME_START=true' runtime-logcat.txt
+            grep -q 'ATTACK_FX=true' runtime-logcat.txt
 
             ! grep -q 'JS_ERROR=' runtime-logcat.txt
             ! grep -q 'FATAL EXCEPTION' runtime-logcat.txt
