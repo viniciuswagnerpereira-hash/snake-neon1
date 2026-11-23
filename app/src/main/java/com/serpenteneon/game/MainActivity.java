@@ -72,38 +72,7 @@ public final class MainActivity extends Activity {
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
                 Log.i(TAG, "PAGE_READY url=" + url);
-
-                view.postDelayed(() -> {
-                    view.evaluateJavascript(
-                        "(function(){return window.appReady===true && " +
-                        "!!document.getElementById('monsterGrid') && " +
-                        "document.querySelectorAll('.monster-card').length===16 && " +
-                        "getComputedStyle(document.querySelector('.monster-art')).backgroundImage.includes('monster-sprites.svg');})()",
-                        value -> Log.i(TAG, "DOM_READY=" + value)
-                    );
-                }, 900);
-
-                if (smokeTest) {
-                    view.postDelayed(() -> {
-                        view.evaluateJavascript(
-                            "(function(){" +
-                            "if(window.appReady!==true)return false;" +
-                            "var n=document.getElementById('trainerName');" +
-                            "var card=document.querySelector('.monster-card');" +
-                            "var start=document.getElementById('startBattleBtn');" +
-                            "if(!n||!card||!start)return false;" +
-                            "n.value='CI_SMOKE';" +
-                            "n.dispatchEvent(new Event('input',{bubbles:true}));" +
-                            "card.click();" +
-                            "start.click();" +
-                            "return document.getElementById('battleScreen').classList.contains('active') && " +
-                            "document.querySelectorAll('.attack').length===2 && " +
-                            "getComputedStyle(document.getElementById('playerArt')).backgroundImage.includes('monster-sprites.svg');" +
-                            "})()",
-                            value -> Log.i(TAG, "GAME_START=" + value)
-                        );
-                    }, 1400);
-                }
+                view.postDelayed(() -> probeAppReady(view, 0), 500);
             }
         });
 
@@ -139,6 +108,53 @@ public final class MainActivity extends Activity {
         setContentView(webView);
         webView.post(this::hideSystemUi);
         webView.loadUrl(APP_URL);
+    }
+
+    private void probeAppReady(WebView view, int attempt) {
+        view.evaluateJavascript(
+            "window.appReady===true",
+            ready -> {
+                if ("true".equals(ready)) {
+                    view.evaluateJavascript(
+                        "(function(){return !!document.getElementById('monsterGrid') && " +
+                        "document.querySelectorAll('.monster-card').length===16 && " +
+                        "getComputedStyle(document.querySelector('.monster-art')).backgroundImage.includes('monster-sprites.svg');})()",
+                        value -> Log.i(TAG, "DOM_READY=" + value)
+                    );
+
+                    if (smokeTest) {
+                        view.postDelayed(() -> runBattleSmokeTest(view), 350);
+                    }
+                    return;
+                }
+
+                if (attempt < 15) {
+                    view.postDelayed(() -> probeAppReady(view, attempt + 1), 500);
+                } else {
+                    Log.e(TAG, "DOM_READY=false");
+                    if (smokeTest) Log.e(TAG, "GAME_START=false");
+                }
+            }
+        );
+    }
+
+    private void runBattleSmokeTest(WebView view) {
+        view.evaluateJavascript(
+            "(function(){" +
+            "var n=document.getElementById('trainerName');" +
+            "var card=document.querySelector('.monster-card');" +
+            "var start=document.getElementById('startBattleBtn');" +
+            "if(!n||!card||!start)return false;" +
+            "n.value='CI_SMOKE';" +
+            "n.dispatchEvent(new Event('input',{bubbles:true}));" +
+            "card.click();" +
+            "start.click();" +
+            "return document.getElementById('battleScreen').classList.contains('active') && " +
+            "document.querySelectorAll('.attack').length===2 && " +
+            "getComputedStyle(document.getElementById('playerArt')).backgroundImage.includes('monster-sprites.svg');" +
+            "})()",
+            value -> Log.i(TAG, "GAME_START=" + value)
+        );
     }
 
     private final class HistoryBridge {
