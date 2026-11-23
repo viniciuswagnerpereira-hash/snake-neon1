@@ -122,6 +122,11 @@ public final class MainActivity extends Activity {
                         value -> Log.i(TAG, "DOM_READY=" + value)
                     );
 
+                    view.evaluateJavascript(
+                        "window.innerHeight > window.innerWidth",
+                        value -> Log.i(TAG, "PORTRAIT_READY=" + value)
+                    );
+
                     if (smokeTest) {
                         view.postDelayed(() -> runBattleSmokeTest(view), 350);
                     }
